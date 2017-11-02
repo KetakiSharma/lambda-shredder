@@ -1,0 +1,164 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  S3RestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: v1
+#      DefinitionUri: swagger.yml
+      DefinitionBody:
+        swagger: '2.0'
+        info:
+          version: '1.0'
+          title:
+            Ref: AWS::StackName
+        paths:
+          /:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ListBucketsFunction.Arn}/invocations
+              responses: {}
+              produces:
+                - application/json
+              security:
+                - api_key: []
+          /{bucket}:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ListObjectsFunction.Arn}/invocations
+              responses: {}
+              produces:
+                - application/json
+              security:
+                - api_key: []
+          /{bucket}/{object}:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetObjectFunction.Arn}/invocations
+              responses: {}
+              produces:
+                - application/json
+              security:
+                - api_key: []
+  ListBucketsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler:  list_buckets.list_bucket_names.handler
+      CodeUri: ./
+      Policies:
+      - AWSLambdaExecute
+      - Version: '2012-10-17' # Policy Document
+      - Statement:
+        - Action:
+          - s3:ListAllMyBuckets
+          Effect: Allow
+          Resource: arn:aws:s3:::*
+      Environment:
+        Variables:
+          S3_BUCKET: my-bucket-ks
+      Events:
+        GetBuckets:
+          Type: Api
+          Properties:
+            Method: get
+            RestApiId:
+              Ref: S3RestApi
+            Path: /
+      Runtime: python2.7
+      Tags:
+        Project:   'Spot Data'
+        Description: 'To explore serverless application'
+        Environment: 'Dev'
+  ListObjectsFunction:
+    Properties:
+      CodeUri: ./
+      Events:
+        GetBuckets:
+          Properties:
+            Method: get
+            RestApiId:
+              Ref: S3RestApi
+            Path: /{bucket}
+          Type: Api
+      Handler: list_objects.list_bucket_objects.handler
+      Policies:
+      - AWSLambdaExecute
+      - Version: '2012-10-17' # Policy Document
+      - Statement:
+        - Action:
+          - s3:ListAllMyBuckets
+          Effect: Allow
+          Resource: arn:aws:s3:::*
+      Runtime: python2.7
+      Tags:
+        Project:   'Spot Data'
+        Description: 'To explore lambda'
+        Environment: 'Dev'
+    Type: AWS::Serverless::Function
+  GetObjectFunction:
+    Properties:
+      CodeUri: ./
+      Events:
+        GetBuckets:
+          Properties:
+            Method: get
+            RestApiId:
+              Ref: S3RestApi
+            Path: /{bucket}/{object}
+          Type: Api
+      Handler: get_object.get_object.handler
+      Policies:
+      - AWSLambdaExecute
+      - Statement:
+        - Action:
+          - s3:GetObject
+          Effect: Allow
+          Resource: arn:aws:s3:::*
+        Version: '2012-10-17'
+      Runtime: python2.7
+      Tags:
+        Project:   'Spot Data'
+        Description: 'To explore lambda'
+        Environment: 'Dev'
+    Type: AWS::Serverless::Function
+  ShredMetadataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: shred_metadata.s3_shred_netcdf_metadata_handler.handler
+      Runtime: python2.7
+      CodeUri: ./
+      MemorySize: 1024
+      Timeout: 300
+      Environment:
+      Policies:
+      - AWSLambdaExecute # Managed Policy
+      - Version: '2012-10-17' # Policy Document
+      - Statement:
+        - Action:
+          - s3:ListBucket
+          Effect: Allow
+          Resource: 'arn:aws:s3:::*'
+      Events:
+        NetCdfMetadataExtractorEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref NetCdfMetadataBucket
+            Events: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: suffix
+                    Value: '.nc'
+  NetCdfMetadataBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: ketaki-bucket-ks
