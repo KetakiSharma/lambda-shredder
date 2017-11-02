@@ -98,6 +98,9 @@ Resources:
           - s3:ListAllMyBuckets
           Effect: Allow
           Resource: arn:aws:s3:::*
+      Environment:
+        Variables:
+          S3_BUCKET: my-bucket-ks
       Runtime: python2.7
       Tags:
         Project:   'Spot Data'
@@ -124,6 +127,9 @@ Resources:
           Effect: Allow
           Resource: arn:aws:s3:::*
         Version: '2012-10-17'
+      Environment:
+        Variables:
+          S3_BUCKET: my-bucket-ks
       Runtime: python2.7
       Tags:
         Project:   'Spot Data'
@@ -139,6 +145,8 @@ Resources:
       MemorySize: 1024
       Timeout: 300
       Environment:
+        Variables:
+          S3_BUCKET: my-bucket-ks
       Policies:
       - AWSLambdaExecute # Managed Policy
       - Version: '2012-10-17' # Policy Document
