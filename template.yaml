@@ -5,7 +5,6 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: v1
-#      DefinitionUri: swagger.yml
       DefinitionBody:
         swagger: '2.0'
         info:
