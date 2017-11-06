@@ -1,0 +1,30 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - printenv
+      - pip install mock
+      - pip install boto3
+      - pip install xarray
+      - pip install netCDF4
+      - pip install requests
+      - pip install awscli --upgrade --user
+  build:
+    commands:
+      - python setup_list_buckets.py build --build-purelib=build/list_buckets
+      - python setup_list_objects.py build --build-purelib=build/list_objects
+      - python setup_get_object.py build --build-purelib=build/get_object
+      - python setup_shred_metadata.py build --build-purelib=build/shred_metadata
+      - pip install setuptools -t build/shred_metadata
+      - pip install xarray -t build/shred_metadata
+      - pip install netCDF4 -t build/shred_metadata
+      - pip install Elasticsearch -t build/list_buckets
+      - pip install requests -t build/list_buckets
+      - pip install requests -t build/list_objects
+      - aws cloudformation package --template-file template.yaml
+                                   --s3-bucket my-bucket-ks
+                                   --output-template-file serverless-output.yaml
+artifacts:
+  type: zip
+  files:
+    - serverless-output.yaml
