@@ -52,7 +52,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler:  list_buckets.list_bucket_names.handler
-      CodeUri: ./
+      CodeUri: ./build/list_buckets
       Policies:
       - AWSLambdaExecute
       - Version: '2012-10-17' # Policy Document
@@ -79,7 +79,7 @@ Resources:
         Environment: 'Dev'
   ListObjectsFunction:
     Properties:
-      CodeUri: ./
+      CodeUri: ./build/list_objects
       Events:
         GetBuckets:
           Properties:
@@ -108,7 +108,7 @@ Resources:
     Type: AWS::Serverless::Function
   GetObjectFunction:
     Properties:
-      CodeUri: ./
+      CodeUri: ./build/get_object
       Events:
         GetBuckets:
           Properties:
@@ -140,7 +140,7 @@ Resources:
     Properties:
       Handler: shred_metadata.s3_shred_netcdf_metadata_handler.handler
       Runtime: python2.7
-      CodeUri: ./
+      CodeUri: ./build/shred_metadata
       MemorySize: 1024
       Timeout: 300
       Environment:

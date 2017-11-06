@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Resources:
   GetObjectFunction:
     Properties:
-      CodeUri: s3://my-bucket-ks/e89fd07354a486583a44e7105f76634e
+      CodeUri: s3://my-bucket-ks/569c462033863dc1b06e708f48943dbb
       Environment:
         Variables:
           S3_BUCKET: my-bucket-ks
@@ -31,7 +31,7 @@ Resources:
     Type: AWS::Serverless::Function
   ListBucketsFunction:
     Properties:
-      CodeUri: s3://my-bucket-ks/e89fd07354a486583a44e7105f76634e
+      CodeUri: s3://my-bucket-ks/569c462033863dc1b06e708f48943dbb
       Environment:
         Variables:
           S3_BUCKET: my-bucket-ks
@@ -60,7 +60,7 @@ Resources:
     Type: AWS::Serverless::Function
   ListObjectsFunction:
     Properties:
-      CodeUri: s3://my-bucket-ks/e89fd07354a486583a44e7105f76634e
+      CodeUri: s3://my-bucket-ks/569c462033863dc1b06e708f48943dbb
       Environment:
         Variables:
           S3_BUCKET: my-bucket-ks
@@ -140,7 +140,7 @@ Resources:
     Type: AWS::Serverless::Api
   ShredMetadataFunction:
     Properties:
-      CodeUri: s3://my-bucket-ks/e89fd07354a486583a44e7105f76634e
+      CodeUri: s3://my-bucket-ks/569c462033863dc1b06e708f48943dbb
       Environment:
         Variables:
           S3_BUCKET: my-bucket-ks
