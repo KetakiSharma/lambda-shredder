@@ -169,4 +169,4 @@ Resources:
   NetCdfMetadataBucket:
     Type: "AWS::S3::Bucket"
     Properties:
-      BucketName: ketaki-bucket-ks
+      BucketName: ketaki-bucket-1

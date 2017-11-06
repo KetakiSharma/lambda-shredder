@@ -2,7 +2,10 @@ AWSTemplateFormatVersion: '2010-09-09'
 Resources:
   GetObjectFunction:
     Properties:
-      CodeUri: s3://my-bucket-ks/fd26afb9212927120eed397d61005b5d
+      CodeUri: s3://my-bucket-ks/e89fd07354a486583a44e7105f76634e
+      Environment:
+        Variables:
+          S3_BUCKET: my-bucket-ks
       Events:
         GetBuckets:
           Properties:
@@ -11,7 +14,7 @@ Resources:
             RestApiId:
               Ref: S3RestApi
           Type: Api
-      Handler: get_object_service.get_object.handler
+      Handler: get_object.get_object.handler
       Policies:
       - AWSLambdaExecute
       - Statement:
@@ -28,7 +31,7 @@ Resources:
     Type: AWS::Serverless::Function
   ListBucketsFunction:
     Properties:
-      CodeUri: s3://my-bucket-ks/fd26afb9212927120eed397d61005b5d
+      CodeUri: s3://my-bucket-ks/e89fd07354a486583a44e7105f76634e
       Environment:
         Variables:
           S3_BUCKET: my-bucket-ks
@@ -40,7 +43,7 @@ Resources:
             RestApiId:
               Ref: S3RestApi
           Type: Api
-      Handler: list_bucket_names_service.list_bucket_names.handler
+      Handler: list_buckets.list_bucket_names.handler
       Policies:
       - AWSLambdaExecute
       - Version: '2012-10-17'
@@ -57,7 +60,10 @@ Resources:
     Type: AWS::Serverless::Function
   ListObjectsFunction:
     Properties:
-      CodeUri: s3://my-bucket-ks/fd26afb9212927120eed397d61005b5d
+      CodeUri: s3://my-bucket-ks/e89fd07354a486583a44e7105f76634e
+      Environment:
+        Variables:
+          S3_BUCKET: my-bucket-ks
       Events:
         GetBuckets:
           Properties:
@@ -66,7 +72,7 @@ Resources:
             RestApiId:
               Ref: S3RestApi
           Type: Api
-      Handler: list_bucket_object_service.list_bucket_objects.handler
+      Handler: list_objects.list_bucket_objects.handler
       Policies:
       - AWSLambdaExecute
       - Version: '2012-10-17'
@@ -83,7 +89,7 @@ Resources:
     Type: AWS::Serverless::Function
   NetCdfMetadataBucket:
     Properties:
-      BucketName: ketaki-bucket-ks
+      BucketName: ketaki-bucket-1
     Type: AWS::S3::Bucket
   S3RestApi:
     Properties:
@@ -134,8 +140,10 @@ Resources:
     Type: AWS::Serverless::Api
   ShredMetadataFunction:
     Properties:
-      CodeUri: s3://my-bucket-ks/fd26afb9212927120eed397d61005b5d
-      Environment: null
+      CodeUri: s3://my-bucket-ks/e89fd07354a486583a44e7105f76634e
+      Environment:
+        Variables:
+          S3_BUCKET: my-bucket-ks
       Events:
         NetCdfMetadataExtractorEvent:
           Properties:
