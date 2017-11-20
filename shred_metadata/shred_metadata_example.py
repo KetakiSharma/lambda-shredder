@@ -60,8 +60,8 @@ class ExampleShredding():
 
 if __name__ == '__main__':
     es = ExampleShredding()
-    bucket_name = 'ketaki-bucket-ks'
-    file_name = 'BEST_FCS_1HOURLY_2017102500_00aeefe8-1d4c-4c0b-9486-b3581beed53d.nc'
+    bucket_name = 'ketaki-bucket-1'
+    file_name = 'BEST_FCS_1HOURLY_2017102300_00aeefe8-1d4c-4c0b-9486-b3581beed53d.nc'
     ds = es._get_netcdf_data_for_file(bucket_name, file_name)
     es._send_metadata_to_dynamo_db(ds)
     geojson_object = es._get_geo_area_from_dataset(ds)
