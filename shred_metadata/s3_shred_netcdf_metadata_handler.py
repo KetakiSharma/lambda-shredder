@@ -22,7 +22,7 @@ def _get_geo_area_from_dataset(ds):
 def _get_forecast_date_from_dataset(ds):
     return ds.data_vars['issue_time'].values
 
-def _get_ddb_geojson_from_coordinates(self,coordinate_list):
+def _get_ddb_geojson_from_coordinates(coordinate_list):
     coords = []
     for i in coordinate_list:
         lon = {"N": str(i[0])}
