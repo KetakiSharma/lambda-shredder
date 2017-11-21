@@ -151,7 +151,7 @@ Resources:
       - Version: '2012-10-17' # Policy Document
       - Statement:
         - Action:
-          - s3:ListBucket
+          - dynamodb:PutItem
           Effect: Allow
           Resource: 'arn:aws:s3:::*'
       Events:
