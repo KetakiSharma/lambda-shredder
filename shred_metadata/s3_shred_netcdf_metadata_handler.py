@@ -15,12 +15,13 @@ def _get_s3_key_name_from_record(record):
     return record['s3']['object']['key']
 
 
-def _get_geo_area_from_dataset(ds):
-    return json.loads(ds.attrs['core_geographic_area_shape'])
+def _get_geo_area_from_dataset(data_set):
+    return json.loads(data_set.attrs['core_geographic_area_shape'])
 
 
-def _get_forecast_date_from_dataset(ds):
-    return ds.data_vars['issue_time'].values
+def _get_forecast_date_from_dataset(data_set):
+    return data_set.data_vars['issue_time'].values
+
 
 def _get_ddb_geojson_from_coordinates(coordinate_list):
     coords = []
@@ -65,8 +66,8 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
             self._send_metadata_to_dynamo_db(data_set,bucket_name,file_name)
             data_set.close()
 
-    def _send_metadata_to_dynamo_db(self,ds,bucket_name,file_name):
-        geojson_object = _get_geo_area_from_dataset(ds)
+    def _send_metadata_to_dynamo_db(self,data_set,bucket_name,file_name):
+        geojson_object = _get_geo_area_from_dataset(data_set)
 
         dynamodb = boto3.resource('dynamodb' , region_name='eu-west-1')
         file_id = uuid.uuid4().get_hex()
@@ -76,7 +77,7 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
         table.put_item(
             Item={
                 'bulk_forecast_file_id': file_id,
-                'forecast_date': _get_forecast_date_from_dataset(ds),
+                'forecast_date': str(_get_forecast_date_from_dataset(data_set)),
                 'bucket_name' : bucket_name,
                 'key': file_name,
                 'geo_json':_get_ddb_geojson_from_coordinates(geojson_object['coordinates'][0])
