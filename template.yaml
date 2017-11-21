@@ -147,17 +147,18 @@ Resources:
         Variables:
           S3_BUCKET: my-bucket-ks
       Policies:
-      - AWSLambdaExecute # Managed Policy
-      - Version: '2012-10-17' # Policy Document
-        Statement:
-        - Action:
-          - s3:ListBucket
-          Effect: Allow
-          Resource: 'arn:aws:s3:::*'
-      - AmazonDynamodbFullAccess
+      - AWSLambdaExecute
       - Version: '2012-10-17'
-      - Statement:
-        - Action:
+        Statement:
+          Effect: Allow
+          Action:
+          - s3:ListBucket
+          Resource: 'arn:aws:s3:::*'
+      - AmazonDynamoDBFullAccess
+      - Version: '2012-10-17'
+        Statement:
+          Effect: Allow
+          Action:
           - dynamodb:PutItem
           Resource: 'arn:aws:dynamodb:::*'
       Events:
