@@ -1,5 +1,6 @@
 import uuid
 import boto3
+import logging
 import os
 import json
 import xarray
@@ -20,7 +21,7 @@ def _get_geo_area_from_dataset(data_set):
 
 
 def _get_forecast_date_from_dataset(data_set):
-    return data_set.data_vars['issue_time'].values
+    return str(data_set.data_vars['issue_time'].values)
 
 
 def _get_ddb_geojson_from_coordinates(coordinate_list):
@@ -76,10 +77,10 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
         table = dynamodb.Table('netcdf-metadata-table')
         table.put_item(
             Item={
-                'bulk_forecast_file_id': file_id,
-                'forecast_date': str(_get_forecast_date_from_dataset(data_set)),
+                'bulk_forecast_file_id': str(uuid.uuid4()),
                 'bucket_name' : bucket_name,
-                'key': file_name,
+                'key_name': file_name,
+                'forecast_date': str(_get_forecast_date_from_dataset(data_set)),
                 'geo_json':_get_ddb_geojson_from_coordinates(geojson_object['coordinates'][0])
             }
         )

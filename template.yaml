@@ -125,7 +125,7 @@ Resources:
           - s3:GetObject
           Effect: Allow
           Resource: arn:aws:s3:::*
-        Version: '2012-10-17'
+      Version: '2012-10-17'
       Environment:
         Variables:
           S3_BUCKET: my-bucket-ks
