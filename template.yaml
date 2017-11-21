@@ -153,7 +153,7 @@ Resources:
         - Action:
           - dynamodb:PutItem
           Effect: Allow
-          Resource: 'arn:aws:s3:::*'
+          Resource: 'arn:aws:dynamodb:::*'
       Events:
         NetCdfMetadataExtractorEvent:
           Type: S3
