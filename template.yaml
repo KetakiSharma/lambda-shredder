@@ -110,7 +110,7 @@ Resources:
     Properties:
       CodeUri: ./build/get_object
       Events:
-        GetBuckets:
+        GetObjects:
           Properties:
             Method: get
             RestApiId:

@@ -24,7 +24,7 @@ def _get_forecast_date_from_dataset(data_set):
     return str(data_set.data_vars['issue_time'].values)
 
 
-def _get_ddb_geojson_from_coordinates(coordinate_list):
+def _get_coordinates(coordinate_list):
     coords = []
     for i in coordinate_list:
         lon = {"N": str(i[0])}
@@ -81,7 +81,7 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
                 'bucket_name' : bucket_name,
                 'key_name': file_name,
                 'forecast_date': str(_get_forecast_date_from_dataset(data_set)),
-                'geo_json':_get_ddb_geojson_from_coordinates(geojson_object['coordinates'][0])
+                'geo_json':_get_coordinates(geojson_object['coordinates'][0])
             }
         )
 
