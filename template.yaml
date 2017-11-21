@@ -149,16 +149,17 @@ Resources:
       Policies:
       - AWSLambdaExecute # Managed Policy
       - Version: '2012-10-17' # Policy Document
-      - Statement:
+        Statement:
         - Action:
           - s3:ListBucket
           Effect: Allow
           Resource: 'arn:aws:s3:::*'
       - AmazonDynamodbFullAccess
       - version '2012-10-17'
-      - Statement:
+        Statement:
         - Action:
           - dynamodb:PutItem
+          Effect: Allow
           Resource: 'arn:aws:dynamodb:::*'
       Events:
         NetCdfMetadataExtractorEvent:
