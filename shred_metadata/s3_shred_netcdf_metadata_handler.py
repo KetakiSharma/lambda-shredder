@@ -90,7 +90,7 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
         )
 
 
-    def handle(self, event, context):
+    def _handle(self, event, context):
         records = event['Records']
         for record in records:
             bucket_name = _get_s3_bucket_name_for_record(record)
