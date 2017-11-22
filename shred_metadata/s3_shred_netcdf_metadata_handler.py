@@ -74,7 +74,7 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
             print('The data_set is*****************' + data_set)
             self._send_metadata_to_dynamo_db(data_set,bucket_name,file_name)
 
-    def _send_metadata_to_dynamo_db(self,data_set,bucket_name,file_name):
+    def _send_metadata_to_dynamo_db(data_set,bucket_name,file_name):
 
         dynamodb = boto3.resource('dynamodb' , region_name='eu-west-1')
         file_id = uuid.uuid4().get_hex()
