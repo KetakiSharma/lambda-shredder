@@ -76,7 +76,7 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
             file_name = _get_s3_key_name_from_record(record)
             print("file name is: " + file_name)
             data_set = self._get_netcdf_data_for_file(bucket_name, file_name)
-            print('The data_set is*****************' + data_set)
+            print('The data_set is*****************' + str(data_set))
             self._send_metadata_to_dynamodb(data_set, bucket_name, file_name)
 
     @staticmethod
