@@ -60,11 +60,12 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
 
     def _get_netcdf_data_for_file(self, bucket_name, object_key):
         file_path = "/tmp/" + uuid.uuid4().get_hex()
-        self.logger.debug('File successfully downloaded into: ' + file_path)
+
         self.s3_client.download_file(
             bucket_name,
             object_key,
             file_path)
+        self.logger.debug('File successfully downloaded into: ' + file_path)
         print(xarray.open_dataset(file_path))
         return xarray.open_dataset(file_path)
 
@@ -76,16 +77,16 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
             print("file name is: " + file_name)
             data_set = self._get_netcdf_data_for_file(bucket_name, file_name)
             print('The data_set is*****************' + data_set)
-            self._send_metadata_to_dynamo_db(data_set, bucket_name, file_name)
+            self._send_metadata_to_dynamodb(data_set, bucket_name, file_name)
 
     @staticmethod
-    def _send_metadata_to_dynamo_db(data_set, bucket_name,file_name):
+    def _send_metadata_to_dynamodb(data_set, bucket_name, file_name):
 
-        dynamodb = boto3.resource('dynamodb' , region_name='eu-west-1')
+        dynamodb_resource = boto3.resource('dynamodb' , region_name='eu-west-1')
         file_id = uuid.uuid4().get_hex()
         print(file_id)
 
-        table = dynamodb.Table('netcdf-metadata-table')
+        table = dynamodb_resource.Table('netcdf-metadata-table')
         table.put_item(
             Item={
                 'uuid': str(uuid.uuid4()),
