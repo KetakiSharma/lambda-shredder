@@ -60,7 +60,7 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
 
     def _get_netcdf_data_for_file(self, bucket_name, object_key):
         file_path = "/tmp/" + uuid.uuid4().get_hex()
-        self.logger.debug('File successfully downloaded into: ' + self.file_path)
+        self.logger.debug('File successfully downloaded into: ' + file_path)
         self.s3_client.download_file(
             bucket_name,
             object_key,
