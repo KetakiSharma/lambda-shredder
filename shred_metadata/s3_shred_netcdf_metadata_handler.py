@@ -16,12 +16,12 @@ def _get_s3_key_name_from_record(record):
 
 
 def _get_forecast_date_from_dataset(data_set):
-    print("dataset is " + str(data_set.data_vars['issue_time'].values))
+    print("date is " + str(data_set.data_vars['issue_time'].values))
     return str(data_set.data_vars['issue_time'].values)
 
 
 def _get_properties_geojson(data_set):
-    print("geojson is" + json.loads(data_set.attrs['core_geographic_area_shape']))
+    print("geojson is" + str(json.loads(data_set.attrs['core_geographic_area_shape'])))
     return json.loads(data_set.attrs['core_geographic_area_shape'])
 
 
