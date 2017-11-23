@@ -16,15 +16,19 @@ def _get_s3_key_name_from_record(record):
 
 
 def _get_forecast_date_from_dataset(data_set):
+    print("dataset is " + str(data_set.data_vars['issue_time'].values))
     return str(data_set.data_vars['issue_time'].values)
 
 
 def _get_properties_geojson(data_set):
+    print("geojson is" + json.loads(data_set.attrs['core_geographic_area_shape']))
     return json.loads(data_set.attrs['core_geographic_area_shape'])
 
 
 def _get_properties(data_set):
+    print("property is " + _get_properties_geojson(data_set)['crs']['properties']['name'])
     return _get_properties_geojson(data_set)['crs']['properties']['name']
+
 
 def _get_type(data_set):
     return _get_properties_geojson(data_set)['type']
@@ -37,8 +41,8 @@ def _get_coordinates(data_set):
 
     coordinates = []
     for coord in coordinate_list:
-        lon = Decimal(str(coord[1]))
-        lat = Decimal(str(coord[0]))
+        lat = Decimal(str(coord[1]))
+        lon = Decimal(str(coord[0]))
         coordinates.append ([lon, lat])
     print(coordinates)
     return coordinates
@@ -56,6 +60,7 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
 
     def _get_netcdf_data_for_file(self, bucket_name, object_key):
         file_path = "/tmp/" + uuid.uuid4().get_hex()
+        self.logger.debug('File successfully downloaded into: ' + self.file_path)
         self.s3_client.download_file(
             bucket_name,
             object_key,
@@ -64,7 +69,6 @@ class S3ShredNetcdfMetadataHandler(AWSLambdaBase):
         return xarray.open_dataset(file_path)
 
     def _shred_metadata(self, event):
-
         for record in event['Records']:
             bucket_name = _get_s3_bucket_name_for_record(record)
             print("bucket name is: " + bucket_name)
